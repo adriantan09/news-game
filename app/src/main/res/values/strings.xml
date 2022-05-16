@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">News Game</string>
+    <string name="api_fail_message">Unable to fetch game data.</string>
+    <string name="skip_button_message">Skip! I give up</string>
+    <string name="question_title">Guess this headline!</string>
+
+    <!-- Content Descriptions  -->
+    <string name="headline_image_content_desc">Headline Image</string>
+    <string name="headline_choice_1_content_desc">Headline Choice 1</string>
+    <string name="headline_choice_2_content_desc">Headline Choice 2</string>
+    <string name="headline_choice_3_content_desc">Headline Choice 3</string>
+    <string name="skip_button_content_desc">Skip Question</string>
 </resources>
