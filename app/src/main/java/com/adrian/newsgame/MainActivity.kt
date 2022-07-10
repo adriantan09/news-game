@@ -2,55 +2,67 @@ package com.adrian.newsgame
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
+import com.adrian.newsgame.databinding.ActivityMainBinding
 import com.adrian.newsgame.model.Game
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import retrofit2.*
-import retrofit2.converter.moshi.MoshiConverterFactory
+import com.adrian.newsgame.model.Question
+import com.adrian.newsgame.network.Status
 
 class MainActivity : AppCompatActivity() {
 
-    private val baseUrl = "https://firebasestorage.googleapis.com/v0/b/nca-dna-apps-dev.appspot.com/o/"
-    private val alt = "media"
-    private val token = "e36c1a14-25d9-4467-8383-a53f57ba6bfe"
+    private lateinit var viewModel: GameViewModel
 
+    private var questionIndex: Int = 0
+    private var questions: ArrayList<Question> = arrayListOf()
+    var points: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
-        val moshi = Moshi.Builder()
-            .add(KotlinJsonAdapterFactory())
-            .build()
-
-        val retrofit = Retrofit.Builder()
-            .addConverterFactory(MoshiConverterFactory.create(moshi))
-            .baseUrl(baseUrl)
-            .build()
-
-        val service = retrofit.create(GameApiService::class.java)
-
-        service.getGame(alt, token).enqueue(object : Callback<Game> {
-            override fun onResponse(call: Call<Game>, response: Response<Game>) {
-                Log.i("MainActivity", response.toString())
-
-                if (!response.isSuccessful) {
-                    Toast.makeText(
-                        this@MainActivity,
-                        getString(R.string.api_fail_message),
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-
-            }
-
-            override fun onFailure(call: Call<Game>, t: Throwable) {
-                Log.i("MainActivity", t.message ?: "No message")
-            }
-        })
-
+        setViewModel()
+        setObserver()
+        DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
     }
+
+    private fun setViewModel() {
+        viewModel = ViewModelProvider(this)[GameViewModel::class.java]
+    }
+
+    private fun setObserver() {
+        viewModel.getGame().observe(this) {
+            when (it.status) {
+                Status.SUCCESS -> setGameData(it.data!!)
+                Status.ERROR -> showErrorMessage()
+                Status.LOADING -> {}
+            }
+        }
+    }
+
+    private fun setGameData(game: Game) { addQuestions(game.questions) }
+
+    private fun addQuestions(questions: List<Question>) { this.questions.addAll(questions) }
+
+    private fun showErrorMessage() {
+        Toast.makeText(this,  getString(R.string.api_fail_message),
+            Toast.LENGTH_LONG).show()
+    }
+
+    fun getQuestion() : Question {
+        if (questionIndex < 0 || questionIndex >= questions.size) {
+            throw ArrayIndexOutOfBoundsException()
+        }
+        return questions[questionIndex]
+    }
+
+    fun incrementQuestionIndex() {
+        if (questionIndex < questions.size - 1) {
+            questionIndex++
+        }
+    }
+
+    fun rewardPoints() { points += 8 }
+
+    fun penalisePoints() { points -= 1 }
 
 }

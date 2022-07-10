@@ -16,6 +16,6 @@ data class Game (
     val version: String = "",
 
     @Json(name = "items")
-    val items: List<Item> = emptyList()
+    val questions: List<Question> = emptyList()
 
 )
