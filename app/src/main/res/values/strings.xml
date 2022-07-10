@@ -1,3 +1,24 @@
 <resources>
+    <!-- Main Menu -->
     <string name="app_name">News Game</string>
+    <string name="start_game">Start Game</string>
+
+    <!-- Question Page -->
+    <string name="api_fail_message">Unable to fetch game data.</string>
+    <string name="skip_button_message">Skip! I give up</string>
+    <string name="question_title">Guess this headline!</string>
+    <string name="points_earned">Points Earned: %d</string>
+
+    <!-- Answer Page -->
+    <string name="next_question">Next Question</string>
+    <string name="correct_text">CORRECT! YOU GAIN 8 POINTS</string>
+    <string name="incorrect_text">INCORRECT! YOU LOSE 1 POINT</string>
+    <string name="read_article">Read Article</string>
+
+    <!-- Content Descriptions  -->
+    <string name="headline_image_content_desc">Headline Image</string>
+    <string name="headline_choice_1_content_desc">Headline Choice 1</string>
+    <string name="headline_choice_2_content_desc">Headline Choice 2</string>
+    <string name="headline_choice_3_content_desc">Headline Choice 3</string>
+    <string name="skip_button_content_desc">Skip Question</string>
 </resources>
